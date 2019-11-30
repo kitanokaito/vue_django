@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import Auth from '@/components/pages/Auth'
-import HedgeHogs from '@/components/pages/HedgeHogs'
+import Home from '@/components/pages/Home'
 
 Vue.use(Router)
 
@@ -11,7 +11,7 @@ export default new Router({
     {
       path: '/',
       name: 'HedgeHogs',
-      component: HedgeHogs
+      component: Home
     },
     {
       path: '/auth',

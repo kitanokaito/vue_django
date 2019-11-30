@@ -13,4 +13,4 @@ class UserSerializer(serializers.ModelSerializer):
 class StoreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Store
-        fields = ('id', 'name', 'body', 'user', 'created_at', 'updated_at')
+        fields = ('id', 'name', 'body', 'image', 'user', 'created_at', 'updated_at')
