@@ -90,7 +90,6 @@ export default {
 			if (this.$refs.form.validate()) {
 				await this.$store.dispatch('auth/loginAction', this.credentials);
 				if (this.apiStatus) {
-					console.log(1)
 					router.push('/');
 				} else {
 					Swal.fire({
