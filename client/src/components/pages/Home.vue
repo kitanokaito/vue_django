@@ -1,27 +1,41 @@
 <template>
   <div>
-    <ul>
-      <li v-for="restaurant in list" :key="restaurant.id">
-          <img :src="restaurant.image" alt="">
-      </li>  
-    </ul>
+    <v-container fluid>
+      <v-row dense>
+        <v-col
+          v-for="restaurant in list"
+          :key="restaurant.name"
+          :cols="restaurant.flex"
+        >
+          <Card
+            :restaurant="restaurant"
+          />
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
 
 <script>
 import router from "../../router";
 import { mapState } from 'vuex';
+import Card from '../molecules/Card.vue';
 export default {
   name: "home",
   mounted() {
-    // this.checkLoggedIn();
+    this.checkLoggedIn();
   },
   created() {
-    // this.getStoreList();
+    this.getStoreList();
   },
   data(){
     return {
+      like: false,
+      bookmark: false,
     };
+  },
+  components: {
+    Card,
   },
   computed:{
     ...mapState({
@@ -37,7 +51,7 @@ export default {
     },
     getStoreList() {
       this.$store.dispatch('restaurants/getListAction', this.token);
-    }
+    },
   }
 };
 </script>
