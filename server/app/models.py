@@ -11,3 +11,8 @@ class Store(models.Model):
 
     def __str__(self):
         return self.name
+
+class Good(models.Model):
+    from_user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    to_store = models.ForeignKey('Store', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
