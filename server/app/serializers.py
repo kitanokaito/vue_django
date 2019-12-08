@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 
-from .models import Store
+from .models import Store, Good
 from rest_framework import serializers
 
 class UserSerializer(serializers.ModelSerializer):
@@ -13,4 +13,9 @@ class UserSerializer(serializers.ModelSerializer):
 class StoreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Store
-        fields = ('id', 'name', 'body', 'user', 'created_at', 'updated_at')
+        fields = ('id', 'name', 'body', 'image', 'user', 'created_at', 'updated_at')
+
+class GoodSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Good
+        fields = ('id', 'from_user', 'to_store', 'created_at')

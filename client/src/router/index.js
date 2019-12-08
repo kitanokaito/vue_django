@@ -2,7 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import Auth from '@/components/pages/Auth'
-import HedgeHogs from '@/components/pages/HedgeHogs'
+import Home from '@/components/pages/Home'
+import Mypage from '@/components/pages/Mypage'
 
 Vue.use(Router)
 
@@ -10,14 +11,16 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'HedgeHogs',
-      component: HedgeHogs
+      component: Home
     },
     {
       path: '/auth',
-      name: 'Auth',
       component: Auth
-    }
+    },
+    {
+       path: '/mypage',
+       component: Mypage
+    },
   ],
   mode: 'history',
 })
