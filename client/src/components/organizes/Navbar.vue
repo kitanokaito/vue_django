@@ -17,7 +17,7 @@
             </v-list-item>
             <v-list-item>
               <v-list-item-content>
-                <v-list-item-title>ログアウト</v-list-item-title>
+                <v-list-item-action @click="logout">ログアウト</v-list-item-action>
               </v-list-item-content>
             </v-list-item>
           </v-list>
@@ -40,11 +40,16 @@ export default {
   computed:{
     ...mapState({
       username: state => state.auth.username,
+      apiStatus: state => state.auth.apiStatus,
     })
   },
   methods:{
     goMypage() {
       router.push('/mypage')
+    },
+    async logout() {
+      await this.$store.dispatch('auth/logoutAction');
+      router.push('/auth');
     }
   }
 }

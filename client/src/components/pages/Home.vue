@@ -21,10 +21,17 @@
 </template>
 
 <script>
+import router from '../../router';
+import { mapState } from 'vuex';
 import List from '../organizes/List.vue';
 import Navbar from '../organizes/Navbar.vue';
 
 export default {
+  created() {
+    if(!this.token) {
+      router.push('/auth');
+    }
+  },
   data() {
     return{
 
@@ -33,6 +40,11 @@ export default {
   components:{
     List,
     Navbar,
+  },
+  computed: {
+    ...mapState({
+      token: state => state.auth.token,
+    }),
   },
 }
 </script>

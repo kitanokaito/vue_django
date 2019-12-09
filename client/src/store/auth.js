@@ -9,10 +9,13 @@ const state = {
 const getters = {};
 
 const mutations = {
-  setToken(state, payload) {
+  setLogin(state, payload) {
     state.username = payload.username
     state.token = payload.token
     state.apiStatus = payload.status
+  },
+  setLogout(state) {
+    state.token = null;
   },
 };
 
@@ -30,7 +33,11 @@ const actions = {
       payload.username = '';
       payload.status = false;
     }
-    context.commit('setToken', payload);
+    context.commit('setLogin', payload);
+  },
+  
+  logoutAction(context) {
+    context.commit('setLogout');
   }
 };
 

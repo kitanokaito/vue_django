@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.db import models
 from django.shortcuts import get_object_or_404
 
 from rest_framework import generics, permissions, status
@@ -14,6 +15,7 @@ class MultipleFieldLookupMixin(object):
         filter = {}
         for field in self.lookup_fields:
             filter[field] = self.kwargs[field]
+
         return get_object_or_404(queryset, **filter)  # Lookup the object
 
 
@@ -51,14 +53,40 @@ class GoodCreate(generics.CreateAPIView):
     serializer_class = GoodSerializer
     permission_classes = (permissions.IsAdminUser,)
 
+    def create(self, request, *args, **kwargs):
+        
+        storeId = request.data['to_store']
+        goodObject = Good(from_user_id=request.user.id, to_store_id=storeId)
+        goodObject.save()
 
-class GoodDestroy(MultipleFieldLookupMixin, generics.DestroyAPIView):
+        return Response(status=status.HTTP_200_OK)
+
+
+class GoodDestroy(generics.DestroyAPIView):
      
     queryset = Good.objects.all()
     serializer_class = GoodSerializer
     permission_classes = (permissions.IsAdminUser,)
-    lookup_fields = ['from_user', 'to_store']
 
+    def destroy(self, request, *args, **kwargs):
+        
+        queryset = self.get_queryset()
+        to_store = request.GET.get('to_store')
+        Good.objects.filter(from_user=request.user.id).filter(to_store=to_store).delete()
+
+        return Response(status=status.HTTP_200_OK)
+
+class GoodStatus(generics.RetrieveAPIView):
+     
+    queryset = Good.objects.all()
+    serializer_class = GoodSerializer
+    permission_classes = (permissions.IsAdminUser,)
+
+    def retrieve(self, request):
+        storeId = request.GET.get('to_store')
+        queryset = Good.objects.filter(from_user=request.user.id).filter(to_store=storeId)
+        data = len(queryset)
+        return Response(data=data, status=status.HTTP_200_OK)
 
 class GoodNum(generics.ListAPIView):
      
