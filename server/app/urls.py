@@ -6,8 +6,6 @@ urlpatterns = [
     path('users/<pk>/', UserRetrieveUpdate.as_view()),
     path('create-users/', UserCreate.as_view()),
     path('store/', StoreListCreate.as_view()),
-    path('good/create/', GoodCreate.as_view()),
-    path('good/destroy/', GoodDestroy.as_view()),
-    path('good/status/', GoodStatus.as_view()),
-    path('good/num/', GoodNum.as_view()),
+    path('good/', GoodCreate.as_view()),
+    path('good/<store_id>', GoodDestroy.as_view()),
 ]

@@ -47,7 +47,7 @@ class StoreListCreate(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAdminUser,)
 
 
-class GoodCreate(generics.CreateAPIView):
+class GoodCreate(generics.ListCreateAPIView):
      
     queryset = Good.objects.all()
     serializer_class = GoodSerializer
@@ -58,43 +58,27 @@ class GoodCreate(generics.CreateAPIView):
         storeId = request.data['to_store']
         goodObject = Good(from_user_id=request.user.id, to_store_id=storeId)
         goodObject.save()
-
         return Response(status=status.HTTP_200_OK)
 
-
-class GoodDestroy(generics.DestroyAPIView):
-     
-    queryset = Good.objects.all()
-    serializer_class = GoodSerializer
-    permission_classes = (permissions.IsAdminUser,)
-
-    def destroy(self, request, *args, **kwargs):
+    def list(self, request):
         
-        queryset = self.get_queryset()
-        to_store = request.GET.get('to_store')
-        Good.objects.filter(from_user=request.user.id).filter(to_store=to_store).delete()
-
-        return Response(status=status.HTTP_200_OK)
-
-class GoodStatus(generics.RetrieveAPIView):
-     
-    queryset = Good.objects.all()
-    serializer_class = GoodSerializer
-    permission_classes = (permissions.IsAdminUser,)
-
-    def retrieve(self, request):
-        storeId = request.GET.get('to_store')
-        queryset = Good.objects.filter(from_user=request.user.id).filter(to_store=storeId)
-        data = len(queryset)
-        return Response(data=data, status=status.HTTP_200_OK)
-
-class GoodNum(generics.ListAPIView):
-     
-    queryset = Good.objects.all()
-    serializer_class = GoodSerializer
-    permission_classes = (permissions.IsAdminUser,)
-
-    def get(self, request):
         to_store = request.GET.get('to_store')
         data = len(Good.objects.filter(to_store=to_store))
         return Response(data=data, status=status.HTTP_200_OK)
+
+
+class GoodDestroy(generics.RetrieveDestroyAPIView):
+     
+    queryset = Good.objects.all()
+    serializer_class = GoodSerializer
+    permission_classes = (permissions.IsAdminUser,)
+
+    def destroy(self, request, store_id):
+        self.get_queryset().filter(from_user=request.user.id).filter(to_store=store_id).delete()
+        return Response(status=status.HTTP_200_OK)
+
+    def retrieve(self, request, store_id):
+        queryset = Good.objects.filter(from_user=request.user.id).filter(to_store=store_id)
+        data = len(queryset)
+        return Response(data=data, status=status.HTTP_200_OK)
+

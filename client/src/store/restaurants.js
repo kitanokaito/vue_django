@@ -36,7 +36,7 @@ const actions = {
     let status = true;
     try {
       axios.defaults.headers.common['Authorization'] = `JWT ${res.token}`;
-      await axios.post('api/good/create/', {
+      await axios.post('api/good/', {
         to_store: res.storeId,
       });
     } catch (error) {
@@ -53,7 +53,7 @@ const actions = {
     }
     try {
       axios.defaults.headers.common['Authorization'] = `JWT ${res.token}`;
-      await axios.delete('api/good/destroy/', { params });
+      await axios.delete(`api/good/${res.storeId}`, { params });
     } catch (error) {
       status = false;
     }
@@ -68,7 +68,7 @@ const actions = {
     }
     try {
       axios.defaults.headers.common['Authorization'] = `JWT ${res.token}`;
-      const { data } = await axios.get('api/good/status/', { params });
+      const { data } = await axios.get(`api/good/${res.storeId}`, { params });
       context.commit('setGoodStatus', data);
     } catch (error) {
       status = false;
@@ -84,7 +84,7 @@ const actions = {
     }
     try {
       axios.defaults.headers.common['Authorization'] = `JWT ${res.token}`;
-      const { data } = await axios.get('api/good/num/', { params });
+      const { data } = await axios.get('api/good/', { params });
       context.commit('setGoodNum', data);
     } catch (error) {
       status = false;
