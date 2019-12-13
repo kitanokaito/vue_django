@@ -25,9 +25,20 @@ const mutations = {
   }
 }
 const actions = {
-  async getListAction(context, token) {
+  async getStoreListAction(context, token) {
     axios.defaults.headers.common['Authorization'] = `JWT ${token}`;
     const { data } = await axios.get('api/store/');
+    context.commit('setRestaurants', data);
+  },
+
+
+  async getStoreListOfUserAction(context, res) {
+    const params =  {
+      username: res.username,
+    }
+    axios.defaults.headers.common['Authorization'] = `JWT ${res.token}`;
+    const { data } = await axios.get('api/store/user', { params });
+    [...data].forEach((_, i) => { data[i].image=axios.defaults.baseURL+data[i].image })
     context.commit('setRestaurants', data);
   },
 

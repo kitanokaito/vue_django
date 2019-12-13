@@ -53,7 +53,7 @@ export default {
       }
     },
     getStoreList() {
-      this.$store.dispatch('restaurants/getListAction', this.token);
+      this.$store.dispatch('restaurants/getStoreListAction', this.token);
     },
   }
 };

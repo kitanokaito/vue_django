@@ -1,7 +1,9 @@
 <template>
   <v-app>
     <v-app-bar color="primary" app dark>
-      <v-toolbar-title>いい店</v-toolbar-title>
+      <v-btn text @click="goHome">
+        <v-toolbar-title>きたログ</v-toolbar-title>
+      </v-btn>
       <v-spacer></v-spacer>
       <v-toolbar-items>
         <v-btn text>ユーザ一覧</v-btn>
@@ -12,12 +14,12 @@
           <v-list>
             <v-list-item>
               <v-list-item-content>
-                <v-list-item-action @click="goMypage">マイページ</v-list-item-action>
+                <v-list-item-title @click="goMypage">マイページ</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
             <v-list-item>
               <v-list-item-content>
-                <v-list-item-action @click="logout">ログアウト</v-list-item-action>
+                <v-list-item-title @click="logout">ログアウト</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
           </v-list>
@@ -44,6 +46,9 @@ export default {
     })
   },
   methods:{
+    goHome() {
+      router.push('/');
+    },
     goMypage() {
       router.push('/mypage')
     },

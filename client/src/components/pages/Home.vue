@@ -58,9 +58,4 @@ export default {
   /* height: 500px; */
   background-color: blue;
 }
-.list {
-  /* height: 500px; */
-  /* background-color: green; */
-}
-
 </style>
