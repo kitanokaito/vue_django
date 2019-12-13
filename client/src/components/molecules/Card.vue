@@ -39,6 +39,8 @@ export default {
   async beforeMount() {
     await this.getGoodNum();
     this.num = this.goodNum;
+    await this.getGoodStatus();
+    this.good = this.goodStatus;
   },
   data() {
     return{
@@ -56,11 +58,12 @@ export default {
   computed: {
     ...mapState({
       goodNum: state => state.restaurants.goodNum,
+      goodStatus: state => state.restaurants.goodStatus,
       apiStatus: state => state.restaurants.apiStatus,
     }),
   },
   methods: {
-    goodBtn(id) {
+    async goodBtn(id) {
       if(this.username == "dev") {
         this.userId = 1;
       } else {
@@ -68,18 +71,14 @@ export default {
       }
       
       if (!this.good) {
-        console.log( this.userId, id);
-        this.$store.dispatch('restaurants/goodCreateAction', {
-          userId: this.userId, 
+        await this.$store.dispatch('restaurants/goodCreateAction', {
           storeId: id, 
           token: this.token
         });
         this.good = !this.good
         this.num = this.num + 1;
       } else {
-        console.log( this.userId, id);
-        this.$store.dispatch('restaurants/goodDestroyAction', {
-          userId: this.userId, 
+        await this.$store.dispatch('restaurants/goodDestroyAction', {
           storeId: id, 
           token: this.token
         });
@@ -89,6 +88,12 @@ export default {
     },
     async getGoodNum() {
       await this.$store.dispatch('restaurants/getGoodNumAction', {
+        storeId: this.restaurant.id, 
+        token: this.token
+      });
+    },
+    async getGoodStatus() {
+      await this.$store.dispatch('restaurants/getGoodStatusAction', {
         storeId: this.restaurant.id, 
         token: this.token
       });
