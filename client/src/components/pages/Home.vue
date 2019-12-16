@@ -1,6 +1,6 @@
 <template>
-  <v-container fluid>
-    <v-row no-gutters class="nav">
+  <div>
+    <v-row no-gutters>
       <Navbar/>
     </v-row>
     <v-row no-gutters>
@@ -17,7 +17,7 @@
         <List/>
       </v-col>
     </v-row>
-  </v-container>
+  </div>
 </template>
 
 <script>
@@ -50,12 +50,7 @@ export default {
 </script>
 
 <style scoped>
-.nav{
-  height: 50px;
-  /* background-color: red; */
-}
 .side{
-  /* height: 500px; */
-  background-color: blue;
+  background-color: aqua;
 }
 </style>

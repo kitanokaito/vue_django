@@ -8,23 +8,25 @@ from rest_framework.response import Response
 from .models import Store, Good
 from .serializers import UserSerializer, StoreSerializer, GoodSerializer
 
-class MultipleFieldLookupMixin(object):
-    def get_object(self):
-        queryset = self.get_queryset()             # Get the base queryset
-        queryset = self.filter_queryset(queryset)  # Apply any filter backends
-        filter = {}
-        for field in self.lookup_fields:
-            filter[field] = self.kwargs[field]
-
-        return get_object_or_404(queryset, **filter)  # Lookup the object
-
-
-
 class StoreListCreate(generics.ListCreateAPIView):
     
     queryset = Store.objects.all()
     serializer_class = StoreSerializer
     permission_classes = (permissions.IsAdminUser,)
+
+    def list(self, request):
+        data = []
+        ids = self.get_queryset().order_by('-pk').values_list('pk', flat=True)
+        for store_id in ids:
+            from_user_id = Store.objects.values_list('user', flat=True).get(pk=store_id)
+            username = User.objects.values_list('username', 'email', flat=False).get(pk=from_user_id)
+            store = self.get_queryset().filter(pk=store_id).first()
+            post = StoreSerializer(store).data
+            post['username'] = username[0]
+            post['email'] = username[1]
+            data.append(post)
+
+        return Response(data=data, status=status.HTTP_200_OK)
 
 class StoreListOfUser(generics.ListCreateAPIView):
     
@@ -38,6 +40,13 @@ class StoreListOfUser(generics.ListCreateAPIView):
         stores = self.get_queryset().filter(user=user)
         data = StoreSerializer(stores, many=True).data
         return Response(data=data, status=status.HTTP_200_OK)
+
+class UserList(generics.ListAPIView):
+    
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (permissions.IsAdminUser,)
+
 
 class GoodCreate(generics.ListCreateAPIView):
      

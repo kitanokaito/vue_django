@@ -11,7 +11,10 @@ const getters = {
 
 }
 const mutations = {
-  setRestaurants(state, list) {
+  setLists(state, list) {
+    state.list = list;
+  },
+  setUsers(state, list) {
     state.list = list;
   },
   setGoodStatus(state, good) {
@@ -28,7 +31,15 @@ const actions = {
   async getStoreListAction(context, token) {
     axios.defaults.headers.common['Authorization'] = `JWT ${token}`;
     const { data } = await axios.get('api/store/');
-    context.commit('setRestaurants', data);
+    [...data].forEach((_, i) => { data[i].image=axios.defaults.baseURL+data[i].image })
+    context.commit('setLists', data);
+  },
+
+
+  async getUsersListAction(context, res) {
+    axios.defaults.headers.common['Authorization'] = `JWT ${res.token}`;
+    const { data } = await axios.get('api/users/');
+    context.commit('setLists', data);
   },
 
 
@@ -39,7 +50,7 @@ const actions = {
     axios.defaults.headers.common['Authorization'] = `JWT ${res.token}`;
     const { data } = await axios.get('api/store/user', { params });
     [...data].forEach((_, i) => { data[i].image=axios.defaults.baseURL+data[i].image })
-    context.commit('setRestaurants', data);
+    context.commit('setLists', data);
   },
 
 

@@ -1,29 +1,48 @@
 <template>
   <v-card>
+    <v-list-item outlined class="user">
+      <v-list-item-avatar>
+        <v-img
+          src="https://cdn.vuetifyjs.com/images/john.jpg"
+        />
+      </v-list-item-avatar>
+      <v-list-item-content>
+        <v-list-item-title>
+          {{ post.username }}
+        </v-list-item-title>
+        <v-list-item-subtitle>
+          {{ post.email }}
+        </v-list-item-subtitle>
+      </v-list-item-content>
+    </v-list-item>
+    <v-divider class="divider"/>
+    <v-list-item> 
+      <v-list-item-content>
+        <v-list-item-title>
+          {{ post.name }}
+        </v-list-item-title>
+        <v-list-item-subtitle>
+          {{ post.name }}
+        </v-list-item-subtitle>
+      </v-list-item-content>
+      <v-card-actions>
+        <span>{{ num }}</span>
+        <v-btn icon :color="good ? 'pink' : ''" @click="goodBtn(post.id)">
+          <v-icon>mdi-heart</v-icon>
+        </v-btn>
+        <v-btn icon :color="bookmark ? 'green' : ''" @click="bookmark=!bookmark">
+          <v-icon>mdi-bookmark</v-icon>
+        </v-btn>
+      </v-card-actions>
+    </v-list-item>
     <v-img
-      :src="restaurant.image"
+      :src="post.image"
       class="white--text align-end"
-      gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-      height="150"
+      gradient="to bottom, rgba(0,0,0,0), rgba(0,0,0,0.4)"
+      height="300"
     >
-      <v-card-title v-text="restaurant.name"></v-card-title>
+      {{ post.body }}
     </v-img>
-    <v-card-actions>
-      <v-spacer></v-spacer>
-
-      <span>{{ num }}</span>
-      <v-btn icon :color="good ? 'pink': ''" @click="goodBtn(restaurant.id)">
-        <v-icon>mdi-heart</v-icon>
-      </v-btn>
-
-      <v-btn icon :color="bookmark ? 'green': ''" @click="bookmark = !bookmark">
-        <v-icon>mdi-bookmark</v-icon>
-      </v-btn>
-
-      <v-btn icon>
-        <v-icon>mdi-share-variant</v-icon>
-      </v-btn>
-    </v-card-actions>
   </v-card>
 </template>
 
@@ -32,10 +51,6 @@
 import { mapState } from 'vuex';
 export default {
 
-  created() {
-    
-    
-  },
   async beforeMount() {
     await this.getGoodNum();
     this.num = this.goodNum;
@@ -44,15 +59,13 @@ export default {
   },
   data() {
     return{
-      userId: 0,
       bookmark: false,
       good: false,
       num: null,
     };
   },
   props: {
-    restaurant: Object,
-    username: String,
+    post: Object,
     token: String,
   },
   computed: {
@@ -64,12 +77,6 @@ export default {
   },
   methods: {
     async goodBtn(id) {
-      if(this.username == "dev") {
-        this.userId = 1;
-      } else {
-        this.userId = 2;
-      }
-      
       if (!this.good) {
         await this.$store.dispatch('restaurants/goodCreateAction', {
           storeId: id, 
@@ -88,13 +95,13 @@ export default {
     },
     async getGoodNum() {
       await this.$store.dispatch('restaurants/getGoodNumAction', {
-        storeId: this.restaurant.id, 
+        storeId: this.post.id, 
         token: this.token
       });
     },
     async getGoodStatus() {
       await this.$store.dispatch('restaurants/getGoodStatusAction', {
-        storeId: this.restaurant.id, 
+        storeId: this.post.id, 
         token: this.token
       });
     }
@@ -102,3 +109,11 @@ export default {
 }
 </script>
 
+<style scoped>
+.divider {
+  margin: 0
+}
+.user {
+  background-color: lightgrey;
+}
+</style>
