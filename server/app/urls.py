@@ -7,4 +7,5 @@ urlpatterns = [
     path('users/', UserList.as_view()),
     path('good/', GoodCreate.as_view()),
     path('good/<store_id>/', GoodDestroy.as_view()),
+    path('myinfo/', MypageRetrieveUpdate.as_view()),
 ]

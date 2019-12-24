@@ -5,8 +5,8 @@ from django.shortcuts import get_object_or_404
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 
-from .models import Store, Good
-from .serializers import UserSerializer, StoreSerializer, GoodSerializer
+from .models import Store, Good, Profile
+from .serializers import UserSerializer, StoreSerializer, GoodSerializer, ProfileSerializer
 
 class StoreListCreate(generics.ListCreateAPIView):
     
@@ -81,5 +81,15 @@ class GoodDestroy(generics.RetrieveDestroyAPIView):
     def retrieve(self, request, store_id):
         queryset = self.get_queryset().filter(from_user=request.user.id).filter(to_store=store_id)
         data = len(queryset)
+        return Response(data=data, status=status.HTTP_200_OK)
+
+class MypageRetrieveUpdate(generics.RetrieveUpdateAPIView):
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
+    permission_classes = (permissions.IsAdminUser,)
+
+    def retrieve(self, request):
+        data = self.get_queryset().filter(user=request.user)
+        data = ProfileSerializer(data, many=True).data
         return Response(data=data, status=status.HTTP_200_OK)
 

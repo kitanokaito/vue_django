@@ -3,7 +3,7 @@
     <v-row>
       <Navbar/>
     </v-row>
-    <v-row>
+    <v-row no-gutters>
       <v-card height="500">
         <v-img
           :src="list[0].image"
@@ -11,6 +11,7 @@
           gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
           height="300"
         >
+        <v-row no-gutters>
           <v-col class="py-0">
             <v-list-item
               color="rgba(0, 0, 0, .4)"
@@ -18,16 +19,25 @@
             >
               <v-avatar size="100">
               <img
-                src="https://cdn.vuetifyjs.com/images/john.jpg"
+                :src="profile.image"
                 alt="John"
               />
               </v-avatar> 
               <v-list-item-content>
-                <v-list-item-title class="title">北野魁人</v-list-item-title>
-                <v-list-item-subtitle>蕎麦いいよね</v-list-item-subtitle>
+                <v-list-item-title class="title">{{ profile.handle_name }}</v-list-item-title>
+                <v-list-item-subtitle>{{ profile.comment }}</v-list-item-subtitle>
               </v-list-item-content>
             </v-list-item>
           </v-col>
+          <v-col>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn class="">
+                <v-icon>mdi-credit-card-wireless</v-icon>
+              </v-btn>
+            </v-card-actions>
+          </v-col>
+        </v-row>
         </v-img>
         <v-row
           class="mb-6"
@@ -60,6 +70,7 @@ export default {
   created() {
     this.getStoreList();
   },
+
   data() {
     return {
       cards: [
@@ -67,7 +78,7 @@ export default {
         'ブックマーク',
         'フォロー',
         'フォロワー'
-      ]
+      ],
     };
   },
   components: {
@@ -78,14 +89,12 @@ export default {
       username: state => state.auth.username,
       token: state => state.auth.token,
       list: state => state.restaurants.list,
+      profile: state => state.auth.profile,
     }),
   },
   methods: {
-    getStoreList() {
-      this.$store.dispatch('restaurants/getStoreListOfUserAction', {
-        token: this.token,
-        username: this.username
-      });
+    async getStoreList() {
+      await this.$store.dispatch('auth/getUserInfoAction', this.token);
     }
   }
 }

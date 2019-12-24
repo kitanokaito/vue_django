@@ -1,14 +1,20 @@
 from django.contrib.auth.models import User
 
-from .models import Store, Good
+from .models import Store, Good, Profile
 from rest_framework import serializers
+
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ('handle_name', 'image', 'comment')
 
 class UserSerializer(serializers.ModelSerializer):
     """ A serializer class for the User model """
+    profile = ProfileSerializer()
+
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name', 'username',
-                  'password', 'is_active', 'is_superuser')
+        fields = ('id', 'username','password', 'is_active', 'is_superuser', 'profile')
 
 class StoreSerializer(serializers.ModelSerializer):
     class Meta:

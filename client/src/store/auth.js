@@ -1,6 +1,7 @@
 import axios from '@/utils'
 
 const state = {
+  profile: null,
   username: null,
   token: null,
   apiStatus: null,
@@ -16,6 +17,10 @@ const mutations = {
   },
   setLogout(state) {
     state.token = null;
+  },
+  setMyinfo(state, profile) {
+    state.profile = profile;
+
   },
 };
 
@@ -38,7 +43,15 @@ const actions = {
   
   logoutAction(context) {
     context.commit('setLogout');
-  }
+  },
+
+
+  async getUserInfoAction(context, token) {
+    axios.defaults.headers.common['Authorization'] = `JWT ${token}`;
+    const { data } = await axios.get('api/myinfo');
+    [...data].forEach((_, i) => { data[i].image=axios.defaults.baseURL+data[i].image })
+    context.commit('setMyinfo', data[0]);
+  },  
 };
 
 export default {

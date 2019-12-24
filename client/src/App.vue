@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app id="app">
    <router-view/>
   </v-app>
 </template>
@@ -9,3 +9,8 @@ export default {
   name: 'App'
 }
 </script>
+
+<style>
+
+#app button:focus { outline:0; }
+</style>

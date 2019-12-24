@@ -3,6 +3,7 @@
     <v-card 
       shaped
       v-for="post in list" :key="post.id"
+      class=divider
     >
       <Card
         :post="post"
@@ -41,3 +42,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.divider{
+  margin: 20px;
+}
+</style>
