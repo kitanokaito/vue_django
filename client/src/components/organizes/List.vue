@@ -37,7 +37,7 @@ export default {
   },
   methods: {
     getStoreList() {
-      this.$store.dispatch('restaurants/getStoreListAction', this.token);
+      this.$store.dispatch('restaurants/getStoreListAction');
     },
   }
 };

@@ -1,29 +1,43 @@
-from django.contrib.auth.models import User
 from django.db import models
-from django.shortcuts import get_object_or_404
-
+from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+from django.conf import settings
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 
 from .models import Store, Good, Profile
 from .serializers import UserSerializer, StoreSerializer, GoodSerializer, ProfileSerializer
 
+
+class UserCreate(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (permissions.AllowAny,)
+
+    def create(self, request):
+        del request.data['passwordConfirm']
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+
+        return Response(status=status.HTTP_200_OK)
+
 class StoreListCreate(generics.ListCreateAPIView):
     
     queryset = Store.objects.all()
     serializer_class = StoreSerializer
-    permission_classes = (permissions.IsAdminUser,)
+    permission_classes = (permissions.AllowAny,)
 
     def list(self, request):
         data = []
         ids = self.get_queryset().order_by('-pk').values_list('pk', flat=True)
         for store_id in ids:
             from_user_id = Store.objects.values_list('user', flat=True).get(pk=store_id)
-            username = User.objects.values_list('username', 'email', flat=False).get(pk=from_user_id)
+            profile = Profile.objects.filter(user=from_user_id).first()
+            profile = ProfileSerializer(profile).data
             store = self.get_queryset().filter(pk=store_id).first()
             post = StoreSerializer(store).data
-            post['username'] = username[0]
-            post['email'] = username[1]
+            post.update(profile)
             data.append(post)
 
         return Response(data=data, status=status.HTTP_200_OK)
@@ -32,7 +46,7 @@ class StoreListOfUser(generics.ListCreateAPIView):
     
     queryset = Store.objects.all()
     serializer_class = StoreSerializer
-    permission_classes = (permissions.IsAdminUser,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def list(self, request):
         username = request.GET.get('username')
@@ -45,14 +59,14 @@ class UserList(generics.ListAPIView):
     
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = (permissions.IsAdminUser,)
+    permission_classes = (permissions.IsAuthenticated,)
 
 
 class GoodCreate(generics.ListCreateAPIView):
      
     queryset = Good.objects.all()
     serializer_class = GoodSerializer
-    permission_classes = (permissions.IsAdminUser,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def create(self, request, *args, **kwargs):
         
@@ -72,7 +86,7 @@ class GoodDestroy(generics.RetrieveDestroyAPIView):
      
     queryset = Good.objects.all()
     serializer_class = GoodSerializer
-    permission_classes = (permissions.IsAdminUser,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def destroy(self, request, store_id):
         self.get_queryset().filter(from_user=request.user.id).filter(to_store=store_id).delete()
@@ -86,7 +100,7 @@ class GoodDestroy(generics.RetrieveDestroyAPIView):
 class MypageRetrieveUpdate(generics.RetrieveUpdateAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
-    permission_classes = (permissions.IsAdminUser,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def retrieve(self, request):
         data = self.get_queryset().filter(user=request.user)

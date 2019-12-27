@@ -55,7 +55,7 @@ import Navbar from '../organizes/Navbar.vue';
 
 export default {
   created() {
-    this.getStoreList();
+    // this.getStoreList();
   },
   data() {
     return {

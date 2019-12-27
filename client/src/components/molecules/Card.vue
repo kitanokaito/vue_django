@@ -3,15 +3,16 @@
     <v-list-item outlined class="user">
       <v-list-item-avatar>
         <v-img
-          src="https://cdn.vuetifyjs.com/images/john.jpg"
+          :src="post.icon"
+          :alt="post.handle_name"
         />
       </v-list-item-avatar>
       <v-list-item-content>
         <v-list-item-title>
-          {{ post.username }}
+          {{ post.handle_name }}
         </v-list-item-title>
-        <v-list-item-subtitle>
-          {{ post.email }}
+        <v-list-item-subtitle class="user_comment">
+          {{ post.comment }}
         </v-list-item-subtitle>
       </v-list-item-content>
     </v-list-item>
@@ -22,10 +23,10 @@
           {{ post.name }}
         </v-list-item-title>
         <v-list-item-subtitle>
-          {{ post.name }}
+          {{ post.address }}
         </v-list-item-subtitle>
       </v-list-item-content>
-      <v-card-actions>
+      <v-card-actions v-if="token">
         <span>{{ num }}</span>
         <v-btn icon :color="good ? 'pink' : ''" @click="goodBtn(post.id)">
           <v-icon>mdi-heart</v-icon>
@@ -52,10 +53,12 @@ import { mapState } from 'vuex';
 export default {
 
   async beforeMount() {
-    await this.getGoodNum();
-    this.num = this.goodNum;
-    await this.getGoodStatus();
-    this.good = this.goodStatus;
+    if (this.token) {
+      await this.getGoodNum();
+      this.num = this.goodNum;
+      await this.getGoodStatus();
+      this.good = this.goodStatus;
+    }
   },
   data() {
     return{
@@ -115,5 +118,8 @@ export default {
 }
 .user {
   background-color: lightgrey;
+}
+.user_comment {
+  font-size: 10px;
 }
 </style>

@@ -6,9 +6,12 @@
     <v-spacer></v-spacer>
     <v-toolbar-items>
       <v-btn text @click="goUsers">ユーザ一覧</v-btn>
-      <v-menu offset-y>
+      <v-menu v-if="token" offset-y>
         <template v-slot:activator="{on}">
-        <v-btn v-on="on" text>{{ username }}</v-btn>
+          <v-btn v-on="on" text>
+            <v-icon>mdi-account</v-icon>
+            {{ username }}
+          </v-btn>
         </template>
         <v-list>
           <v-list-item>
@@ -19,6 +22,23 @@
           <v-list-item>
             <v-list-item-content>
               <v-list-item-title @click="logout">ログアウト</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+      <v-menu v-else offset-y>
+        <template v-slot:activator="{on}">
+          <v-btn v-on="on" text>きたログを使う</v-btn>
+        </template>
+        <v-list>
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title @click="goLogin">ログイン</v-list-item-title>
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item>
+            <v-list-item-content>
+              <v-list-item-title @click="goRegister">新規登録</v-list-item-title>
             </v-list-item-content>
           </v-list-item>
         </v-list>
@@ -39,25 +59,28 @@ export default {
   },
   computed:{
     ...mapState({
-      token: state => state.auth.token,
       username: state => state.auth.username,
       apiStatus: state => state.auth.apiStatus,
-      list: state => state.restaurants.list,
     })
+  },
+  props: {
+    token: String,
   },
   methods:{
     goHome() {
       router.push('/');
+    },
+    goLogin() {
+      router.push('/auth');
+    },
+    goRegister() {
+      router.push('/register');
     },
     goMypage() {
       router.push('/mypage')
     },
     goUsers() {
       router.push('/users')
-      // await this.$store.dispatch('restaurants/getUsersListAction', {
-      //   token: this.token
-      // });
-      // console.log(this.list);
     },
     async logout() {
       await this.$store.dispatch('auth/logoutAction');

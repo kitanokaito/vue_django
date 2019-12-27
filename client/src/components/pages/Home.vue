@@ -1,7 +1,9 @@
 <template>
   <div>
     <v-row no-gutters>
-      <Navbar/>
+      <Navbar
+        :token="token"
+      />
     </v-row>
     <v-row no-gutters>
       <v-col
@@ -21,17 +23,12 @@
 </template>
 
 <script>
-import router from '../../router';
+// import router from '../../router';
 import { mapState } from 'vuex';
 import List from '../organizes/List.vue';
 import Navbar from '../organizes/Navbar.vue';
 
 export default {
-  created() {
-    if(!this.token) {
-      router.push('/auth');
-    }
-  },
   data() {
     return{
 

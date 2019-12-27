@@ -28,10 +28,14 @@ const mutations = {
   }
 }
 const actions = {
-  async getStoreListAction(context, token) {
-    axios.defaults.headers.common['Authorization'] = `JWT ${token}`;
+  async getStoreListAction(context) {
+    // axios.defaults.headers.common['Authorization'] = `JWT ${token}`;
     const { data } = await axios.get('api/store/');
-    [...data].forEach((_, i) => { data[i].image=axios.defaults.baseURL+data[i].image })
+    [...data].forEach((_, i) => { 
+      data[i].icon = data[i].icon ? axios.defaults.baseURL+data[i].icon
+       : axios.defaults.baseURL+'/media/profile_image/no-icon.jpeg'
+       data[i].image = axios.defaults.baseURL+data[i].image
+    })
     context.commit('setLists', data);
   },
 
@@ -49,7 +53,10 @@ const actions = {
     }
     axios.defaults.headers.common['Authorization'] = `JWT ${res.token}`;
     const { data } = await axios.get('api/store/user', { params });
-    [...data].forEach((_, i) => { data[i].image=axios.defaults.baseURL+data[i].image })
+    [...data].forEach((_, i) => { 
+      data[i].icon = data[i].icon ? axios.defaults.baseURL+data[i].icon
+       : axios.defaults.baseURL+'/media/profile_image/no-icon.jpeg'
+    })
     context.commit('setLists', data);
   },
 

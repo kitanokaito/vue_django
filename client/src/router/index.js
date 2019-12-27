@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Auth from '@/components/pages/Auth'
+import Register from '@/components/pages/Register'
 import Home from '@/components/pages/Home'
 import Mypage from '@/components/pages/Mypage'
 import Users from '@/components/pages/Users'
@@ -16,6 +17,10 @@ export default new Router({
     {
       path: '/auth',
       component: Auth
+    },
+    {
+      path: '/register',
+      component: Register,
     },
     {
        path: '/mypage',

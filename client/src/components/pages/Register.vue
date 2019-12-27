@@ -7,7 +7,7 @@
 			<v-flex xs12 sm8 lg4 md5>
 				<v-card class="login-card">
 					<v-card-title>
-						<span class="headline">Login to きたログ</span>
+						<span class="headline">Register to きたログ</span>
 					</v-card-title>
 					<v-spacer/>
 					<v-card-text>
@@ -28,13 +28,21 @@
 							<v-container>
 								<v-text-field
 									v-model="credentials.username"
-									:counter="70"
+									:counter="10"
 									label="ユーザー名"
 									:rules="rules.username"
 									maxlength="70"
 									required
 								/>
-								<v-text-field
+                <v-text-field
+									v-model="credentials.email"
+									:counter="70"
+									label="email"
+									:rules="rules.email"
+									maxlength="70"
+									required
+								/>
+                <v-text-field
 									type="password"
 									v-model="credentials.password"
 									:counter="20"
@@ -43,8 +51,17 @@
 									maxlength="20"
 									required
 								/>
+								<v-text-field
+									type="password"
+									v-model="credentials.passwordConfirm"
+									:counter="20"
+									label="確認用パスワード"
+									:rules="rules.passwordConfirm"
+									maxlength="20"
+									required
+								/>
 							</v-container>
-							<v-btn class="pink white--text" :disabled="!valid" @click="login">Login</v-btn>
+							<v-btn class="pink white--text" :disabled="!valid" @click="register">Register</v-btn>
 						</v-form>
 					</v-card-text>
 				</v-card>
@@ -65,34 +82,48 @@ export default {
 		}
 	},
 
-	data: () => ({
-		credentials: {},
-		valid:true,
-		loading:false,
-		rules: {
-			username: [
-				v => !!v || "ユーザー名は必須です",
-				v => (v && v.length > 2) || "ユーザー名は3文字以上でなければなりません",
-				v => /^[a-z0-9_]+$/.test(v) || "許可されていない文字が入力されています"
-			],
-			password: [
-				v => !!v || "パスワードは必須です",
-				v => (v && v.length > 4) || "パスワードは5文字以上でなければなりません"
-			]
-		}
-	}),
+	data() {
+    return {
+      credentials: {
+        username: null,
+        email: null,
+        password: null,
+        passwordConfirm: null
+      },
+      valid:true,
+      loading:false,
+      rules: {
+        username: [
+          v => !!v || "ユーザー名は必須です",
+          v => (v && v.length > 2) || "ユーザー名は3文字以上でなければなりません",
+          v => /^[a-z0-9_]+$/.test(v) || "許可されていない文字が入力されています"
+        ],
+        email: [
+          v => !!v || "emailは必須です",
+          v => /.+@.+\..+/.test(v) || 'emailの形式が異なります',
+        ],
+        password: [
+          v => !!v || "パスワードは必須です",
+          v => (v && v.length > 4) || "パスワードは5文字以上でなければなりません"
+        ],
+        passwordConfirm: [
+          v => !!v || '確認用パスワードは',
+          v => v === this.credentials.password || 'パスワードと異なります',
+        ],
+      }
+    }
+  },
 	computed: {
 		...mapState({
-			token: state => state.auth.token,
 			apiStatus: state => state.auth.apiStatus,
 		})
 	},
 	methods: {
-		async login() {
+		async register() {
 			if (this.$refs.form.validate()) {
-				await this.$store.dispatch('auth/loginAction', this.credentials);
+				await this.$store.dispatch('auth/registerAction', this.credentials);
 				if (this.apiStatus) {
-					router.push('/');
+					router.push('/auth');
 				} else {
 					Swal.fire({
 						title: 'Error',

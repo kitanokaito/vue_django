@@ -1,16 +1,17 @@
 <template>
   <div>
     <v-row>
-      <Navbar/>
+      <Navbar
+        :token="token"
+      />
     </v-row>
-    <v-row no-gutters>
-      <v-card height="500">
-        <v-img
-          :src="list[0].image"
-          class="white--text align-end"
-          gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-          height="300"
-        >
+    <v-card height="500">
+      <v-img
+        :src="list[0].image"
+        class="white--text align-end"
+        gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+        height="300"
+      >
         <v-row no-gutters>
           <v-col class="py-0">
             <v-list-item
@@ -19,7 +20,7 @@
             >
               <v-avatar size="100">
               <img
-                :src="profile.image"
+                :src="profile.icon"
                 alt="John"
               />
               </v-avatar> 
@@ -38,26 +39,25 @@
             </v-card-actions>
           </v-col>
         </v-row>
-        </v-img>
-        <v-row
-          class="mb-6"
-          no-gutters
+      </v-img>
+      <v-row
+        class="mb-6"
+        no-gutters
+      >
+        <v-col
+          v-for="card in cards"
+          :key="card"
         >
-          <v-col
-            v-for="card in cards"
-            :key="card"
+          <v-card
+            class="pa-2"
+            tile
+            outlined
           >
-            <v-card
-              class="pa-2"
-              tile
-              outlined
-            >
-              <span class="card-title">{{ card }}</span>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-card>
-    </v-row>
+            <span class="card-title">{{ card }}</span>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-card>
   </div>
 </template>
 
@@ -70,7 +70,6 @@ export default {
   created() {
     this.getStoreList();
   },
-
   data() {
     return {
       cards: [
